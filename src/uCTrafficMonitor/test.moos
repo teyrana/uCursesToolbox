@@ -1,0 +1,11 @@
+// MOOS file
+ServerHost = localhost
+ServerPort = 9000
+
+AppTick   = 4
+CommsTick = 4
+
+ProcessConfig = uCTrafficMonitor
+{
+  // no app config defined, yet
+}

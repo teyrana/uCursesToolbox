@@ -26,7 +26,7 @@ SET( RUNTIME_OUTPUT_DIRECTORY "${IVP_EXTEND_BIN_DIR}"  CACHE PATH "" )
 # Find MOOS
 #=============================================================================
 find_package(MOOS 10.0)
-INCLUDE_DIRECTORIES(${MOOS_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES( SYSTEM ${MOOS_INCLUDE_DIRS})
 
 #=============================================================================
 # Find the "moos-ivp" base directory
@@ -51,7 +51,7 @@ endif()
 #=============================================================================
 
 FILE(GLOB IVP_INCLUDE_DIRS ${MOOSIVP_SOURCE_TREE_BASE}/ivp/src/lib_* )
-INCLUDE_DIRECTORIES(${IVP_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(SYSTEM ${IVP_INCLUDE_DIRS})
 
 FILE(GLOB IVP_LIBRARY_DIRS ${MOOSIVP_SOURCE_TREE_BASE}/lib )
 LINK_DIRECTORIES(${IVP_LIBRARY_DIRS})
@@ -61,7 +61,6 @@ LINK_DIRECTORIES(${IVP_LIBRARY_DIRS})
 #=============================================================================
 
 find_package(Curses REQUIRED)
-#TARGET_INCLUDE_DIRECTORIES(${CURRENT_TARGET} ${CURSES_INCLUDE_DIRS}) # not necessary?
 
 #=============================================================================
 # Specify Compiler Flags

@@ -17,12 +17,12 @@
 
 #include <string>
 
-#include <ncurses.h>
-
 #include "MBUtils.h"
 
 #include "TrafficMonitor.hpp"
 #include "TrafficMonitorInfo.hpp"
+#include "CursesRenderer.hpp"
+#include "CursesInputHandler.hpp"
 
 using namespace std;
 
@@ -32,8 +32,6 @@ int main(int argc, char *argv[])
     string run_command = argv[0];
     string incoming_var;
     string outgoing_var;
-
-    TrafficMonitor mon;
 
     for(int i=1; i<argc; i++) {
         string argi = argv[i];
@@ -58,20 +56,15 @@ int main(int argc, char *argv[])
     if(mission_file == "")
         showHelpAndExit();
 
-	// initialise Ncurses
-    initscr();
-    printw("Ncurses initialized\n");
-    refresh();			/* Print it on to the real screen */
+    CursesRenderer ui;
+    TrafficMonitor mon;
+    CursesInputHandler keyhandler;
 
-    mon.Run(run_command.c_str(), mission_file.c_str());
+    //mon.Run(run_command.c_str(), mission_file.c_str());
 
-    // vv DEBUG
-    refresh();			/* Print it on to the real screen */
-    getch();			/* Wait for user input */
-    // ^^ DEBUG
-
-    printw("Program finished... shutting down NCurses");
-    endwin();			/* End curses mode		  */
+    while(1){
+      ui.render();
+    }
 
     return(0);
 }

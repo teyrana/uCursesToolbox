@@ -16,8 +16,84 @@
 //*****************************************************************************
 
 
+#include <ncurses.h>
+
 #include "CursesRenderer.hpp"
 
-// CursesRenderer::CursesRenderer(const std::vector<Track>& _trackList){
-//     this->trackList = _trackList;
-// }
+CursesRenderer::CursesRenderer():
+    last_input("?")
+{
+    // initialise Ncurses
+    if (initscr() == NULL) {
+        fprintf(stderr, "Error initializing NCurses: initscr() failed!!\n");
+        exit(EXIT_FAILURE);
+    }
+    printw("Ncurses initialized\n");
+    refresh();
+}
+
+void CursesRenderer::loadTrack(const Track& newTrack){
+
+}
+
+void CursesRenderer::renderInput(){
+    move(LINES-1,0);
+
+    printw(last_input.c_str());
+    printw("\n");
+
+    return;
+}
+
+
+void CursesRenderer::renderStatusBar(){
+    move(LINES-2,0);
+
+    attron(A_REVERSE);
+    {
+        printw("---------------------------------");
+        printw("---------------------------------");
+        printw("---------------------------------");
+        printw("  {:>4} Tracks\n", (int)1);
+        printw("---------------------------------");
+    }
+    attroff(A_REVERSE);
+    return;
+}
+
+void CursesRenderer::renderTracks(){
+    move(0,0);
+
+    // print header:
+    printw("Source     Time           X / Y            Latitude / Longitude  \n");
+
+    printw("iGPS       1.1       2242.2 / 784823       55.09493 / 10.7993 \n");
+
+
+    // for(trackIndex=0; trackIndex < trackList.size(); trackIndex++){
+
+    return;
+}
+
+void CursesRenderer::render(){
+
+    renderTracks();
+
+    renderStatusBar();
+
+    renderInput();
+
+    refresh();			/* Print it on to the real screen */
+
+    char last_char_input = static_cast<char>(getch()); // don't redraw, yet.
+    if('q' == last_char_input){
+        exit(0);
+    }
+    last_input = string(1, last_char_input);
+}
+
+CursesRenderer::~CursesRenderer(){
+    printw("Program finished... shutting down NCurses");
+    endwin();			/* End curses mode		  */
+    fprintf(stderr, "Program finished... shutting down NCurses...");
+}

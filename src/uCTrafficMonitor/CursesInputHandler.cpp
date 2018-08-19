@@ -15,27 +15,21 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-#ifndef TRAFFIC_MONITOR_HPP
-#define TRAFFIC_MONITOR_HPP
 
-#include "MOOS/libMOOS/MOOSLib.h"
+#include <ncurses.h>
 
-// see: http://gobysoft.org/doc/moos/class_c_m_o_o_s_app.html
-class TrafficMonitor : public CMOOSApp
-{
-    public:
-        TrafficMonitor();
-        virtual ~TrafficMonitor() {};
+#include "CursesInputHandler.hpp"
 
-        // required / inherited methods
-        bool OnNewMail(MOOSMSG_LIST &NewMail) override;
-        bool Iterate() override;
-        bool OnConnectToServer() override;
-        bool OnStartUp() override;
 
-    protected:
-        // std::vector<Track> trackList;
+CursesInputHandler::CursesInputHandler(){
+  // One-character-a-time:
+  // Disables the buffering of typed characters by the TTY driver;
+  // get a-character-at-a-time input,
+  cbreak();
 
-};
+  // No echo:
+  // Suppresses the automatic echoing of typed characters:
+  noecho();
 
-#endif
+
+}

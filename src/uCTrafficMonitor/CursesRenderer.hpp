@@ -27,13 +27,20 @@ class CursesRenderer
 {
     public:
         CursesRenderer();
-        // CursesRenderer(const std::vector<Track>& trackList);
-        virtual ~CursesRenderer() {};
+
+        virtual ~CursesRenderer();
+
+        void loadTrack(const Track & newTrack);
 
         void render();
 
     private:
-        std::shared_ptr<std::vector<Track> > trackList;
+        void renderInput();
+        void renderStatusBar();
+        void renderTracks();
+
+    protected:
+        string last_input;
 
 };
 

@@ -9,6 +9,7 @@ SET(EXE uCTraffic)
 
 
 SET(SRC
+    CursesInputHandler.cpp
     CursesRenderer.cpp
     TrafficMonitor.cpp
     TrafficMonitorInfo.cpp
@@ -33,3 +34,7 @@ TARGET_LINK_LIBRARIES(${EXE} PRIVATE
     genutil
     mbutil
     apputil)
+
+SET_PROPERTY(TARGET ${EXE} PROPERTY CXX_STANDARD 11)
+
+TARGET_COMPILE_OPTIONS(${EXE} PRIVATE -Wall)

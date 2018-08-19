@@ -15,8 +15,10 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-
 #include <iterator>
+
+#include <ncurses.h>
+
 #include "MBUtils.h"
 
 #include "TrafficMonitor.hpp"
@@ -26,9 +28,7 @@ using namespace std;
 //---------------------------------------------------------
 // Constructor
 
-TrafficMonitor::TrafficMonitor()
-{
-
+TrafficMonitor::TrafficMonitor(){
 
 }
 
@@ -41,10 +41,11 @@ bool TrafficMonitor::OnNewMail(MOOSMSG_LIST &NewMail)
     for(p = NewMail.begin(); p!=NewMail.end(); p++) {
         CMOOSMsg &msg = *p;
 
-        string key = msg.GetKey();
+        const string key = msg.GetKey();
 
-        // no-op
-
+        if("NODE_REPORT"==key){
+            // NYI
+        }
     }
     return(true);
 }
@@ -66,8 +67,8 @@ bool TrafficMonitor::OnConnectToServer()
 
 bool TrafficMonitor::Iterate()
 {
-    // m_iterations++;
-    //
+    printw("....? TrafficMonitor#Iterate() ...\n");
+
     // unsigned int i, amt = (m_tally_recd - m_tally_sent);
     // for(i=0; i<amt; i++) {
     //     m_tally_sent++;

@@ -33,7 +33,7 @@ class CursesRenderer
         void render();
 
     private:
-        std::shared_ptr<std::vector<Track>> trackList;
+        std::shared_ptr<std::vector<Track> > trackList;
 
 };
 

@@ -38,13 +38,17 @@ void resizeHandler(int sig)
 }
 
 CursesRenderer::CursesRenderer():
-    last_input("?")
+    long_input_mode(false),
+    input_index(0),
+    command(COLS, ' ')
 {
     // initialise Ncurses
     if (initscr() == NULL) {
         fprintf(stderr, "Error initializing NCurses: initscr() failed!!\n");
         exit(EXIT_FAILURE);
     }
+
+    raw();
 
     // SIGWINCH ~= SIGnal-WINdow-CHange
     signal(SIGWINCH, resizeHandler);
@@ -58,11 +62,15 @@ void CursesRenderer::loadTrack(const Track& newTrack){
 }
 
 void CursesRenderer::renderInput(){
-    move(LINES-1,0);
-
-    printw(last_input.c_str());
-    printw("\n");
-
+    if(long_input_mode){
+        mvprintw(LINES-1, 0, ">> ");
+        mvprintw(LINES-1, 3, command.c_str());
+        printw("\n");
+    }else{
+        mvprintw(LINES-1, 0, command.c_str());
+        printw(" (%d)", static_cast<int>(command[0]));
+        printw("\n");
+    }
     return;
 }
 
@@ -72,45 +80,119 @@ void CursesRenderer::renderStatusBar(){
 
     attron(A_REVERSE);
     {
-        printw("---------------------------------");
-        printw("---------------------------------");
-        printw("---------------------------------");
-        printw("  {:>4} Tracks\n", (int)1);
-        printw("---------------------------------");
+        printw("============");  // chunks of 12
+        printw("============");
+        printw("==== %4d/%4d Tracks ==== ", (int)1, (int)1);
+        printw("============");
+        printw("============");
+
+        rightFillStatusBar();
     }
     attroff(A_REVERSE);
     return;
 }
 
-void CursesRenderer::renderTracks(){
-    move(0,0);
+void CursesRenderer::rightFillStatusBar(){
+    int x, y, columns_remaining;
+    getyx(stdscr, y, x);
+    columns_remaining = COLS - x;
 
-    // print header:
-    printw("Source     Time           X / Y            Latitude / Longitude  \n");
+    while(columns_remaining > 12){
+        printw("============");
+        getyx(stdscr, y, x);
+        columns_remaining = COLS - x;
+    }
 
-    printw("iGPS       1.1       2242.2 / 784823       55.09493 / 10.7993 \n");
+    // logically it should be 0, but that would crash ncurses :(
+    while(columns_remaining > 1){
+        printw("=");
+        getyx(stdscr, y, x);
+        columns_remaining = COLS - x;
+    }
+}
 
+void CursesRenderer::renderTrackLabels(){
+    mvprintw(0,0,"Source       Time           X / Y            Latitude / Longitude  \n");
+    mvprintw(1,0,"=====================================================================");
 
-    // for(trackIndex=0; trackIndex < trackList.size(); trackIndex++){
+    int x, y, columns_remaining;
+    getyx(stdscr, y, x);
+    columns_remaining = COLS - x;
+
+    while(columns_remaining > 12){
+        printw("============");
+        getyx(stdscr, y, x);
+        columns_remaining = COLS - x;
+    }
+
+    // logically it should be 0, but that would crash ncurses :(
+    while(columns_remaining > 1){
+        printw("=");
+        getyx(stdscr, y, x);
+        columns_remaining = COLS - x;
+    }
+}
+
+void CursesRenderer::renderTrackContents(){
+
+    for(int trackIndex=0; trackIndex < 1/*trackList.size()*/; trackIndex++){
+        mvprintw(trackIndex+2,0,"iGPS       1.1         2242.2 / 784823       55.09493 / 10.7993 \n");
+    }
 
     return;
 }
 
 void CursesRenderer::render(){
 
-    renderTracks();
+    renderTrackLabels();
+    renderTrackContents();
 
     renderStatusBar();
-
     renderInput();
 
     refresh();			/* Print it on to the real screen */
 
-    char last_char_input = static_cast<char>(getch()); // don't redraw, yet.
-    if('q' == last_char_input){
-        exit(0);
+    handleKeyStrokes(getch());
+}
+
+void CursesRenderer::handleKeyStrokes(const char key_input){
+    if(long_input_mode){
+        if('\n' == key_input){
+            long_input_mode = false;
+            handleLongCommands(command);
+            return;
+        }else{
+            // merely grow the command-in-progress
+            command[input_index] = key_input;
+            input_index++;
+        }
+    }else{
+        handleHotKeys(key_input);
     }
-    last_input = string(1, last_char_input);
+}
+void CursesRenderer::handleHotKeys(const char key){
+    // 17 == ctrl-q on OSX/Darwin/Terminal
+    if('q' == key || 17 == key){
+        shutdownCurses();
+        exit(0);
+    }else if('\n' == key){
+        long_input_mode = true;
+        command.clear();
+        return;
+    }else{
+        input_index = 0;
+        command[0] = key;
+        return;
+    }
+}
+
+void CursesRenderer::handleLongCommands(const string& commandString){
+    // pass; no-op
+}
+
+void CursesRenderer::shutdownCurses(){
+  endwin();			/* End curses mode		  */
+  fprintf(stderr, "Program finished... shutting down NCurses...");
 }
 
 CursesRenderer::~CursesRenderer(){

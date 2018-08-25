@@ -19,6 +19,7 @@
 #define CURSES_RENDERER_HPP
 
 #include <memory>
+#include <string>
 #include <vector>
 
 #include "Track.hpp"
@@ -37,10 +38,20 @@ class CursesRenderer
     private:
         void renderInput();
         void renderStatusBar();
-        void renderTracks();
+        void renderTrackLabels();
+        void renderTrackContents();
+
+        void rightFillStatusBar();
+        void handleKeyStrokes(const char key);
+        void handleHotKeys(const char key);
+        void handleLongCommands(const string& commandString);
+
+        void shutdownCurses();
 
     protected:
-        string last_input;
+        bool long_input_mode;
+        int input_index;
+        string command;
 
 };
 

@@ -17,8 +17,25 @@
 
 
 #include <ncurses.h>
+#include <signal.h>
 
 #include "CursesRenderer.hpp"
+
+/* If an xterm is resized the contents on your text windows might be messed up.
+To handle this gracefully you should redraw all the stuff based on the new
+height and width of the screen. When resizing happens, your program is sent
+a SIGWINCH signal. You should catch this signal and do redrawing accordingly.
+*/
+void resizeHandler(int sig)
+{
+    int h, w;
+
+    // this simply doesn't update h&w under OSX when using terminal
+    getmaxyx(stdscr, h, w);
+    fprintf(stderr, "Resizing: (h= %d, w= %d )\n", h, w);
+    fprintf(stderr, "Resizing: (LINES= %d, COLS= %d )\n", LINES, COLS);
+    refresh();
+}
 
 CursesRenderer::CursesRenderer():
     last_input("?")
@@ -28,6 +45,10 @@ CursesRenderer::CursesRenderer():
         fprintf(stderr, "Error initializing NCurses: initscr() failed!!\n");
         exit(EXIT_FAILURE);
     }
+
+    // SIGWINCH ~= SIGnal-WINdow-CHange
+    signal(SIGWINCH, resizeHandler);
+
     printw("Ncurses initialized\n");
     refresh();
 }

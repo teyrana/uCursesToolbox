@@ -14,7 +14,7 @@ INCLUDE_DIRECTORIES(${LOCAL_LIBRARY_DIRS})
 #============================================================================
 # List the subdirectories to build...
 #============================================================================
-ADD_SUBDIRECTORY(uCTrafficMonitor)
+ADD_SUBDIRECTORY(uCTrackMonitor)
 ADD_SUBDIRECTORY(uCMAC)
 #ADD_SUBDIRECTORY(pPrimeFactor)
 #ADD_SUBDIRECTORY(pFoobar)

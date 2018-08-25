@@ -21,11 +21,11 @@
 #include "MOOS/libMOOS/MOOSLib.h"
 
 // see: http://gobysoft.org/doc/moos/class_c_m_o_o_s_app.html
-class TrafficMonitor : public CMOOSApp
+class TrackMonitor : public CMOOSApp
 {
     public:
-        TrafficMonitor();
-        virtual ~TrafficMonitor() {};
+        TrackMonitor();
+        virtual ~TrackMonitor() {};
 
         // required / inherited methods
         bool OnNewMail(MOOSMSG_LIST &NewMail) override;

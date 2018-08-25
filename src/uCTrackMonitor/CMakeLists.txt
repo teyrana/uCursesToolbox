@@ -5,14 +5,15 @@
 
 # Set System Specific Libraries
 
-SET(EXE uCTraffic)
+SET(EXE uCTrackMonitor)
 
 
 SET(SRC
     CursesInputHandler.cpp
     CursesRenderer.cpp
-    TrafficMonitor.cpp
-    TrafficMonitorInfo.cpp
+    TrackCache.cpp
+    TrackMonitor.cpp
+    TrackMonitorInfo.cpp
     Report.cpp
     Track.cpp
     main.cpp

@@ -21,21 +21,21 @@
 
 #include "MBUtils.h"
 
-#include "TrafficMonitor.hpp"
+#include "TrackMonitor.hpp"
 
 using namespace std;
 
 //---------------------------------------------------------
 // Constructor
 
-TrafficMonitor::TrafficMonitor(){
+TrackMonitor::TrackMonitor(){
 
 }
 
 //---------------------------------------------------------
 // Procedure: OnNewMail
 
-bool TrafficMonitor::OnNewMail(MOOSMSG_LIST &NewMail)
+bool TrackMonitor::OnNewMail(MOOSMSG_LIST &NewMail)
 {
     MOOSMSG_LIST::iterator p;
     for(p = NewMail.begin(); p!=NewMail.end(); p++) {
@@ -54,7 +54,7 @@ bool TrafficMonitor::OnNewMail(MOOSMSG_LIST &NewMail)
 //---------------------------------------------------------
 // Procedure: OnConnectToServer
 
-bool TrafficMonitor::OnConnectToServer()
+bool TrackMonitor::OnConnectToServer()
 {
     // this is the only registration
     Register("NODE_REPORT", 0);
@@ -65,9 +65,9 @@ bool TrafficMonitor::OnConnectToServer()
 //---------------------------------------------------------
 // Procedure: Iterate()
 
-bool TrafficMonitor::Iterate()
+bool TrackMonitor::Iterate()
 {
-    printw("....? TrafficMonitor#Iterate() ...\n");
+    printw("....? TrackMonitor#Iterate() ...\n");
 
     // unsigned int i, amt = (m_tally_recd - m_tally_sent);
     // for(i=0; i<amt; i++) {
@@ -106,7 +106,7 @@ bool TrafficMonitor::Iterate()
 // Procedure: OnStartUp()
 //      Note: happens before connection is open
 
-bool TrafficMonitor::OnStartUp()
+bool TrackMonitor::OnStartUp()
 {
     STRING_LIST sParams;
     m_MissionReader.GetConfiguration(GetAppName(), sParams);

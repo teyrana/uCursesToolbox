@@ -16,11 +16,13 @@
 //*****************************************************************************
 
 #include <string>
+#include <vector>
 
 #include "MBUtils.h"
 
-#include "TrafficMonitor.hpp"
-#include "TrafficMonitorInfo.hpp"
+#include "TrackCache.hpp"
+#include "TrackMonitor.hpp"
+#include "TrackMonitorInfo.hpp"
 #include "CursesInputHandler.hpp"
 
 using namespace std;
@@ -55,9 +57,10 @@ int main(int argc, char *argv[])
     if(mission_file == "")
         showHelpAndExit();
 
+    TrackCache cache;
+
     CursesInputHandler handler;
-    // CursesRenderer ui;
-    TrafficMonitor mon;
+    TrackMonitor mon;
 
     //mon.Run(run_command.c_str(), mission_file.c_str());
 

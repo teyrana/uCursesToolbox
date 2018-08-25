@@ -15,19 +15,23 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-#ifndef TRAFFIC_MONITOR_INFO_HPP
-#define TRAFFIC_MONITOR_INFO_HPP
+#ifndef TRACK_CACHE_HPP
+#define TRACK_CACHE_HPP
 
-// file-scope function declaration
-void showSynopsis();
+#include <vector>
+#include "Track.hpp"
 
-void showExampleConfigAndExit();
+class TrackCache
+{
+    public:
+        TrackCache();
 
-void showHelpAndExit();
+        ~TrackCache(){}
 
-void showInterfaceAndExit();
+    private:
+        std::vector<Track> store;
 
-void showVersionAndExit();
 
+};
 
 #endif

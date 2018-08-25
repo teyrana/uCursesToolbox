@@ -18,16 +18,16 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "TrafficMonitorInfo.hpp"
+#include "TrackMonitorInfo.hpp"
 
 void showExampleConfigAndExit(){
     printf("\n");
     printf("\n");
     printf("================================================================\n");
-    printf(" uCTrafficMonitor example MOOS Configuration \n");
+    printf(" uCTrackMonitor example MOOS Configuration \n");
     printf("================================================================\n");
     printf("\n");
-    printf("ProcessConfig = uCTrafficMonitor\n");
+    printf("ProcessConfig = uCTrackMonitor\n");
     printf("{\n");
     printf("\n");
     printf("   // -- no configuration -- \n");
@@ -43,7 +43,7 @@ void showHelpAndExit(){
     printf("\n");
     printf("\n");
     printf("================================================================\n");
-    printf("Usage: uCTrafficMonitor <file.moos> [options]\n");
+    printf("Usage: uCTrackMonitor <file.moos> [options]\n");
     printf("================================================================\n");
     showSynopsis();
     printf("\n");
@@ -61,7 +61,7 @@ void showInterfaceAndExit(){
     printf("\n");
     printf("\n");
     printf("================================================================\n");
-    printf(" uCTrafficMonitor\n");
+    printf(" uCTrackMonitor\n");
     printf("================================================================\n");
     showSynopsis();
     printf("\n");
@@ -87,7 +87,7 @@ void showSynopsis(){
 }
 
 void showVersionAndExit(){
-    printf("uCTrafficMonitor - Version 0.0.1\n");
+    printf("uCTrackMonitor - Version 0.0.1\n");
 
     exit(0);
 }

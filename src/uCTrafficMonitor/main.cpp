@@ -21,7 +21,6 @@
 
 #include "TrafficMonitor.hpp"
 #include "TrafficMonitorInfo.hpp"
-#include "CursesRenderer.hpp"
 #include "CursesInputHandler.hpp"
 
 using namespace std;
@@ -56,14 +55,14 @@ int main(int argc, char *argv[])
     if(mission_file == "")
         showHelpAndExit();
 
-    CursesRenderer ui;
+    CursesInputHandler handler;
+    // CursesRenderer ui;
     TrafficMonitor mon;
-    CursesInputHandler keyhandler;
 
     //mon.Run(run_command.c_str(), mission_file.c_str());
 
     while(1){
-      ui.render();
+      handler.handleInput();
     }
 
     return(0);

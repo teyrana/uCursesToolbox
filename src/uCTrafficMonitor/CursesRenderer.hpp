@@ -20,38 +20,30 @@
 
 #include <memory>
 #include <string>
-#include <vector>
+// #include <vector>
 
-#include "Track.hpp"
+// #include "Track.hpp"
+
+using std::string;
 
 class CursesRenderer
 {
     public:
         CursesRenderer();
 
-        virtual ~CursesRenderer();
+        void configureCurses();
 
-        void loadTrack(const Track & newTrack);
+        virtual ~CursesRenderer(){}
 
-        void render();
+        void render( const bool hotKeyMode, const string command);
 
     private:
-        void renderInput();
+        void renderInput( const bool hotKeyMode, const string& command);
         void renderStatusBar();
         void renderTrackLabels();
         void renderTrackContents();
 
         void rightFillStatusBar();
-        void handleKeyStrokes(const char key);
-        void handleHotKeys(const char key);
-        void handleLongCommands(const string& commandString);
-
-        void shutdownCurses();
-
-    protected:
-        bool long_input_mode;
-        int input_index;
-        string command;
 
 };
 

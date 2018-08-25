@@ -18,14 +18,40 @@
 #ifndef CURSES_INPUT_HANDLER_HPP
 #define CURSES_INPUT_HANDLER_HPP
 
-#include <memory>
+#include <string>
+// #include <memory>
+
+#include "CursesRenderer.hpp"
+
+using std::string;
 
 class CursesInputHandler
 {
     public:
         CursesInputHandler();
 
+        void configureCurses();
+
         virtual ~CursesInputHandler() {};
+
+        void handleInput();
+        int handleKeyStroke(const char key);
+
+        bool inHotKeyMode() const;
+        const string& getCommand() const;
+
+    private:
+        int handleHotKeys(const char key);
+        int handleLongCommands(const string& commandString);
+
+        void shutdownCurses();
+
+    private:
+        bool long_input_mode;
+        int input_index;
+        string command;
+
+        CursesRenderer renderer;
 
 };
 

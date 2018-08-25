@@ -37,38 +37,25 @@ void resizeHandler(int sig)
     refresh();
 }
 
-CursesRenderer::CursesRenderer():
-    long_input_mode(false),
-    input_index(0),
-    command(COLS, ' ')
+CursesRenderer::CursesRenderer()
 {
-    // initialise Ncurses
-    if (initscr() == NULL) {
-        fprintf(stderr, "Error initializing NCurses: initscr() failed!!\n");
-        exit(EXIT_FAILURE);
-    }
-
-    raw();
-
-    // SIGWINCH ~= SIGnal-WINdow-CHange
-    signal(SIGWINCH, resizeHandler);
-
-    printw("Ncurses initialized\n");
-    refresh();
+  // SIGWINCH ~= SIGnal-WINdow-CHange
+  signal(SIGWINCH, resizeHandler);
 }
 
-void CursesRenderer::loadTrack(const Track& newTrack){
-
+void CursesRenderer::configureCurses(){
 }
 
-void CursesRenderer::renderInput(){
-    if(long_input_mode){
+void CursesRenderer::renderInput( const bool hotKeyMode, const string& command){
+    if(hotKeyMode){
         mvprintw(LINES-1, 0, ">> ");
         mvprintw(LINES-1, 3, command.c_str());
         printw("\n");
     }else{
         mvprintw(LINES-1, 0, command.c_str());
-        printw(" (%d)", static_cast<int>(command[0]));
+        if( 1 == command.size()){
+            printw(" (%d)", static_cast<int>(command[0]));
+        }
         printw("\n");
     }
     return;
@@ -142,61 +129,13 @@ void CursesRenderer::renderTrackContents(){
     return;
 }
 
-void CursesRenderer::render(){
+void CursesRenderer::render( const bool hotKeyMode, const string command){
 
     renderTrackLabels();
     renderTrackContents();
 
     renderStatusBar();
-    renderInput();
+    renderInput(hotKeyMode, command);
 
     refresh();			/* Print it on to the real screen */
-
-    handleKeyStrokes(getch());
-}
-
-void CursesRenderer::handleKeyStrokes(const char key_input){
-    if(long_input_mode){
-        if('\n' == key_input){
-            long_input_mode = false;
-            handleLongCommands(command);
-            return;
-        }else{
-            // merely grow the command-in-progress
-            command[input_index] = key_input;
-            input_index++;
-        }
-    }else{
-        handleHotKeys(key_input);
-    }
-}
-void CursesRenderer::handleHotKeys(const char key){
-    // 17 == ctrl-q on OSX/Darwin/Terminal
-    if('q' == key || 17 == key){
-        shutdownCurses();
-        exit(0);
-    }else if('\n' == key){
-        long_input_mode = true;
-        command.clear();
-        return;
-    }else{
-        input_index = 0;
-        command[0] = key;
-        return;
-    }
-}
-
-void CursesRenderer::handleLongCommands(const string& commandString){
-    // pass; no-op
-}
-
-void CursesRenderer::shutdownCurses(){
-  endwin();			/* End curses mode		  */
-  fprintf(stderr, "Program finished... shutting down NCurses...");
-}
-
-CursesRenderer::~CursesRenderer(){
-    printw("Program finished... shutting down NCurses");
-    endwin();			/* End curses mode		  */
-    fprintf(stderr, "Program finished... shutting down NCurses...");
 }

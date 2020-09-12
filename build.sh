@@ -36,11 +36,13 @@ done
 #-------------------------------------------------------------------
 
 mkdir -p build
-cd build
 
-cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ../
+pushd build
+if ! cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ../ ; then 
+    exit $?
+fi
 
-make ${CMD_LINE_ARGS}
-cd ${INVOCATION_ABS_DIR}
-
-
+if ! make ${CMD_LINE_ARGS} ; then
+    exit $?
+fi
+popd

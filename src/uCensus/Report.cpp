@@ -15,32 +15,19 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-#ifndef TRACK_HPP
-#define TRACK_HPP
+#include <cmath>
+#include <cstdlib>
+#include <iostream>
 
-#include <memory>
-#include <string>
-#include <cstdint>
+#include "Report.hpp"
 
-using std::shared_ptr;
-using std::string;
-using std::uint32_t;
-
-class Report;
-
-class Track
+Report::Report(uint64_t _id)
+    : id(_id)
+    , latitude(NAN)
+    , longitude(NAN)
+    , heading(NAN)
+    , course(NAN)
+    , speed(NAN)
 {
-    public:
-      Track();
-      Track(int uuid);
-      virtual ~Track() {};
-
-    protected:
-        std::string name;
-        const uint32_t uuid;
-
-        shared_ptr<Report> lastReport;
-
-};
-
-#endif
+    // no-op
+}

@@ -15,24 +15,20 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-#ifndef REPORT_HPP
-#define REPORT_HPP
+#include <cmath>
+#include <cstdlib>
+#include <iostream>
 
-class Report
-{
-    public:
-        Report();
-        Report( double cog, double hdg, double lat, const double lon, const double spd);
+#include "TrackCache.hpp"
 
-        virtual ~Report() {};
+Track* const TrackCache::get(uint64_t id) const {
+    return nullptr;
+}
 
-        const double course;
-        const double heading;
-        const double latitude;
-        const double longitude;
-        const double speed;
+size_t TrackCache::size() const {
+    return index.size();
+}
 
-};
-
-
-#endif
+bool TrackCache::update(Report* report){
+    return true;
+}

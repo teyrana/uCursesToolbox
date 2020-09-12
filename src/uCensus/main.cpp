@@ -20,17 +20,15 @@
 
 #include "MBUtils.h"
 
-#include "TrackCache.hpp"
 #include "TrackMonitor.hpp"
 #include "TrackMonitorInfo.hpp"
-#include "CursesInputHandler.hpp"
 
-using namespace std;
+using std::string;
 
 int main(int argc, char *argv[])
 {
     string mission_file;
-    string run_command = argv[0];
+    string run_command("uCensus");
     string incoming_var;
     string outgoing_var;
 
@@ -48,7 +46,7 @@ int main(int argc, char *argv[])
         // add more arguments here.
 
         }else if(strEnds(argi, ".moos") || strEnds(argi, ".moos++")){
-            mission_file = argv[i];
+            mission_file = argi;
         }else if(i==2){
             run_command = argi;
         }
@@ -57,16 +55,9 @@ int main(int argc, char *argv[])
     if(mission_file == "")
         showHelpAndExit();
 
-    TrackCache cache;
+    TrackMonitor monitor;
 
-    CursesInputHandler handler;
-    TrackMonitor mon;
-
-    //mon.Run(run_command.c_str(), mission_file.c_str());
-
-    while(1){
-      handler.handleInput();
-    }
+    monitor.Run(run_command.c_str(), mission_file.c_str());
 
     return(0);
 }

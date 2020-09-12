@@ -15,45 +15,21 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-#ifndef CURSES_INPUT_HANDLER_HPP
-#define CURSES_INPUT_HANDLER_HPP
+#include <cstdlib>
+#include <iostream>
 
-#include <string>
-// #include <memory>
+#include "Report.hpp"
+#include "Track.hpp"
 
-#include "CursesRenderer.hpp"
+using namespace std;
 
-using std::string;
+Track::Track(uint64_t _uuid)
+    : name("<not-initialized>")
+    , uuid(_uuid)
+{}
 
-class CursesInputHandler
-{
-    public:
-        CursesInputHandler();
-
-        void configureCurses();
-
-        virtual ~CursesInputHandler() {};
-
-        void handleInput();
-        int handleKeyStroke(const char key);
-
-        bool inHotKeyMode() const;
-        const string& getCommand() const;
-
-    private:
-        int handleHotKeys(const char key);
-        int handleLongCommands(const string& commandString);
-
-        void shutdownCurses();
-
-    private:
-        bool long_input_mode;
-        int input_index;
-        string command;
-
-        CursesRenderer renderer;
-
-};
-
-
-#endif
+// Track::setName(const string new_name){
+//     // if this->name != new_name {
+//     //     this->name = new_name;
+//     // }
+// }

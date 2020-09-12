@@ -15,22 +15,34 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-#ifndef TRACK_CACHE_HPP
-#define TRACK_CACHE_HPP
+#ifndef TRAFFIC_MONITOR_HPP
+#define TRAFFIC_MONITOR_HPP
 
-#include <vector>
-#include "Track.hpp"
+#include <memory>
+using std::unique_ptr;
 
-class TrackCache
+#include "MOOS/libMOOS/MOOSLib.h"
+
+#include "TrackCache.hpp"
+#include "CursesInputHandler.hpp"
+#include "CursesRenderer.hpp"
+
+// see: http://gobysoft.org/doc/moos/class_c_m_o_o_s_app.html
+class TrackMonitor : public CMOOSApp
 {
     public:
-        TrackCache();
+        TrackMonitor();
+        virtual ~TrackMonitor() {};
 
-        ~TrackCache(){}
+        // required / inherited methods
+        bool OnNewMail(MOOSMSG_LIST &NewMail) override;
+        bool Iterate() override;
+        bool OnConnectToServer() override;
+        bool OnStartUp() override;
 
-    private:
-        std::vector<Track> store;
-
+    protected:
+        CursesInputHandler handler;
+        TrackCache cache;
 
 };
 

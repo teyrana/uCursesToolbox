@@ -15,27 +15,34 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-#ifndef TRAFFIC_MONITOR_HPP
-#define TRAFFIC_MONITOR_HPP
+#ifndef REPORT_HPP
+#define REPORT_HPP
 
-#include "MOOS/libMOOS/MOOSLib.h"
-
-// see: http://gobysoft.org/doc/moos/class_c_m_o_o_s_app.html
-class TrackMonitor : public CMOOSApp
+class Report
 {
     public:
-        TrackMonitor();
-        virtual ~TrackMonitor() {};
+        Report(uint64_t _id);
 
-        // required / inherited methods
-        bool OnNewMail(MOOSMSG_LIST &NewMail) override;
-        bool Iterate() override;
-        bool OnConnectToServer() override;
-        bool OnStartUp() override;
+        ~Report() {};
 
-    protected:
-        // std::vector<Track> trackList;
+// metadata
+        std::string name;
+        const uint64_t id;
+
+// position
+        const double latitude;
+        const double longitude;
+
+// orientation
+        /// /brief degrees CW from true north
+        const double heading;
+
+// velocity
+        /// /brief degrees CW from true north
+        const double course;
+        const double speed;
 
 };
+
 
 #endif

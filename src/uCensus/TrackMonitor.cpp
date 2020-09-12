@@ -23,13 +23,15 @@
 
 #include "TrackMonitor.hpp"
 
-using namespace std;
+using std::string;
 
 //---------------------------------------------------------
 // Constructor
 
-TrackMonitor::TrackMonitor(){
-
+TrackMonitor::TrackMonitor()
+    : handler(cache)
+{
+    
 }
 
 //---------------------------------------------------------
@@ -42,12 +44,15 @@ bool TrackMonitor::OnNewMail(MOOSMSG_LIST &NewMail)
         CMOOSMsg &msg = *p;
 
         const string key = msg.GetKey();
-
-        if("NODE_REPORT"==key){
+        if(("NODE_REPORT"==key) || ("NODE_REPORT_LOCAL"==key)){
             // NYI
         }
     }
-    return(true);
+
+    // if(changed)
+    //     handler.update(changed);
+    
+    return true;
 }
 
 
@@ -59,16 +64,23 @@ bool TrackMonitor::OnConnectToServer()
     // this is the only registration
     Register("NODE_REPORT", 0);
 
-    return(true);
+    std::cerr << "Connected to server!... Initializing Curses:" << std::endl;
+    
+    // const double app_freq = GetAppFreq();
+    handler.configure();//app_freq);
+
+    // force an initial draw
+    handler.update(true);
+
+    return true;
 }
 
 //---------------------------------------------------------
-// Procedure: Iterate()
-
 bool TrackMonitor::Iterate()
 {
-    printw("....? TrackMonitor#Iterate() ...\n");
-
+   
+    const bool changed = handler.handle_input();
+    
     // unsigned int i, amt = (m_tally_recd - m_tally_sent);
     // for(i=0; i<amt; i++) {
     //     m_tally_sent++;
@@ -97,9 +109,11 @@ bool TrackMonitor::Iterate()
     //         Notify(m_outgoing_var+"_POST_HZ", frequency);
     //     }
     // }
+
+    handler.update(changed);
+    
     return(true);
 }
-
 
 
 //---------------------------------------------------------
@@ -108,20 +122,19 @@ bool TrackMonitor::Iterate()
 
 bool TrackMonitor::OnStartUp()
 {
-    STRING_LIST sParams;
-    m_MissionReader.GetConfiguration(GetAppName(), sParams);
-    //
+    // STRING_LIST sParams;
+    // m_MissionReader.GetConfiguration(GetAppName(), sParams);
     // STRING_LIST::iterator p;
     // for(p = sParams.begin();p!=sParams.end();p++) {
     //     string line  = *p;
     //     string param = tolower(biteStringX(line, '='));
     //     string value = line;
     //
-    //     if(param == "incoming_var")
-    //     m_incoming_var = value;
-    //
-    //     else if(param == "outgoing_var")
-    //     m_outgoing_var = value;
+    //     // if("apptick" == param){
+    //     //     std::cerr << "AppTick == " << value << std::endl;
+    //     // }else if("commstick"== param){
+    //     //     std::cerr << "CommsTick == " << value << std::endl;
+    //     // }
     // }
 
     return(true);

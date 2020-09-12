@@ -5,8 +5,7 @@
 
 # Set System Specific Libraries
 
-SET(EXE uCTrackMonitor)
-
+SET(EXE uCensus)
 
 SET(SRC
     CursesInputHandler.cpp

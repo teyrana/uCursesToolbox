@@ -15,29 +15,32 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-#include <cstdlib>
-#include <iostream>
+#ifndef TRACK_HPP
+#define TRACK_HPP
 
-#include "Report.hpp"
-#include "Track.hpp"
+#include <memory>
+#include <string>
+#include <cstdint>
 
-using namespace std;
+using std::shared_ptr;
+using std::string;
+using std::uint32_t;
 
-Track::Track():
-    uuid(0)
+class Report;
+
+class Track
 {
-    this->name = "<not-initialized>";
-}
+    public:
+        Track() = delete;
+        Track(uint64_t uuid);
+        ~Track() = default;
 
+    protected:
+        std::string name;
+        const uint64_t uuid;
 
-Track::Track(int _uuid):
-    uuid(_uuid)
-{
-    this->name = "<not-initialized>";
-}
+        shared_ptr<Report> lastReport;
 
-// Track::setName(const string new_name){
-//     // if this->name != new_name {
-//     //     this->name = new_name;
-//     // }
-// }
+};
+
+#endif

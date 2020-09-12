@@ -26,6 +26,7 @@ Processconfig = ANTLER
   // Run = pEvalLoiter      @ NewConsole = false
 }
 
+#include plug_uCensus.moos
 // #include plug_pEvalLoiter.moos
 #include plug_uFldNodeBroker.moos
 #include plug_pShare.moos

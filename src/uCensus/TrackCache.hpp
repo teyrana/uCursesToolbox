@@ -15,28 +15,31 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-#include <cmath>
-#include <cstdlib>
-#include <iostream>
+#ifndef TRACK_CACHE_HPP
+#define TRACK_CACHE_HPP
+
+#include <map>
+#include <vector>
 
 #include "Report.hpp"
+#include "Track.hpp"
 
-Report::Report():
-    course(NAN),
-    heading(NAN),
-    latitude(NAN),
-    longitude(NAN),
-    speed(NAN)
+class TrackCache
 {
-    // no-op
-}
+    public:
+        TrackCache() = default;
 
-Report::Report( double cog, double hdg, double lat, double lon, double spd):
-    course(cog),
-    heading(hdg),
-    latitude(lat),
-    longitude(lon),
-    speed(spd)
-{
-    // no-op
-}
+        ~TrackCache() = default;
+
+        Track * const get(uint64_t id) const;
+
+        size_t size() const;
+
+        bool update(Report* report);
+
+    private:
+        std::map<uint64_t, Track> index;
+
+};
+
+#endif

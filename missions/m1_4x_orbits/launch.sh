@@ -24,6 +24,13 @@ for ARGI; do
     fi
 done
 
+echo "testing MOOS_IVP_PATH..."
+if ! [ -x "$(nsplug)" ]; then 
+    echo "augmenting path..."
+    export PATH=$PATH:~/moos-ivp/bin
+fi
+
+
 #-------------------------------------------------------
 #  Part 2: Create the .moos and .bhv files. 
 #-------------------------------------------------------

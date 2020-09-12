@@ -15,13 +15,40 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-#include <cmath>
-#include <cstdlib>
-#include <iostream>
+#ifndef CURSES_INPUT_HANDLER_HPP
+#define CURSES_INPUT_HANDLER_HPP
 
-#include "TrackCache.hpp"
+#include <string>
+// #include <memory>
 
-TrackCache::TrackCache()
+#include "CursesRenderer.hpp"
+
+using std::string;
+
+class CursesInputHandler
 {
-    // no-op
-}
+    public:
+        CursesInputHandler() = delete;
+        
+        CursesInputHandler(TrackCache& cache);
+
+        void configure();
+
+        ~CursesInputHandler() =  default;
+
+        bool handle_input();
+        
+        void update(bool changed);
+
+    private:
+        bool handle_option_key(const char key);
+        
+        void shutdownCurses();
+
+    private:
+        CursesRenderer renderer;
+
+};
+
+
+#endif

@@ -22,28 +22,49 @@
 #include <string>
 // #include <vector>
 
-// #include "Track.hpp"
+#include "TrackCache.hpp"
 
 using std::string;
 
 class CursesRenderer
 {
     public:
-        CursesRenderer();
+        CursesRenderer() = delete;
 
-        void configureCurses();
+        CursesRenderer(TrackCache& cache);
 
-        virtual ~CursesRenderer(){}
+        ~CursesRenderer() = default;
 
-        void render( const bool hotKeyMode, const string command);
+        void configure();
+
+        bool is_paused() const;
+        void pause();
+        void resume();
+
+        void set_key_command(const char command);
+
+        void update();
+
 
     private:
-        void renderInput( const bool hotKeyMode, const string& command);
-        void renderStatusBar();
-        void renderTrackLabels();
-        void renderTrackContents();
+        void render_command();
+        void render_options();
+        void render_status_bar();
+        void render_column_headers();
+        void render_column_contents();
 
-        void rightFillStatusBar();
+        // void render_status_bar();
+
+    private: 
+        static const int footer_line_offset = -4;
+        static const int option_upper_line_offset = -3;
+        static const int option_lower_line_offset = -2;
+        static const int status_line_offset = -1;
+
+        TrackCache& cache;
+        bool paused;
+        char command;
+        int iteration;
 
 };
 

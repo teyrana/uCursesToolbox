@@ -23,13 +23,17 @@
 
 using namespace std;
 
-Track::Track(uint64_t _uuid)
-    : name("<not-initialized>")
-    , uuid(_uuid)
+Track::Track(const std::string& _name, uint64_t _id)
+    : name(_name)
+    , id(_id)
 {}
 
-// Track::setName(const string new_name){
-//     // if this->name != new_name {
-//     //     this->name = new_name;
-//     // }
-// }
+Track::Track(const Track& other)
+    : name(other.name)
+    , id(other.id)
+{}
+
+void Track::update(std::unique_ptr<Report> _report){
+    last_report = std::move(_report);
+    // _report is left in an undefined state
+}

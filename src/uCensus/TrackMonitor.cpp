@@ -45,7 +45,7 @@ bool TrackMonitor::OnNewMail(MOOSMSG_LIST &NewMail)
 
         const string key = msg.GetKey();
         if(("NODE_REPORT"==key) || ("NODE_REPORT_LOCAL"==key)){
-            // NYI
+            cache.update(Report::make(msg.GetAsString()));
         }
     }
 
@@ -62,7 +62,8 @@ bool TrackMonitor::OnNewMail(MOOSMSG_LIST &NewMail)
 bool TrackMonitor::OnConnectToServer()
 {
     // this is the only registration
-    Register("NODE_REPORT", 0);
+    Register("NODE_REPORT", 1.0);
+    Register("NODE_REPORT_LOCAL", 1.0);
 
     std::cerr << "Connected to server!... Initializing Curses:" << std::endl;
     
@@ -78,9 +79,9 @@ bool TrackMonitor::OnConnectToServer()
 //---------------------------------------------------------
 bool TrackMonitor::Iterate()
 {
-   
-    const bool changed = handler.handle_input();
-    
+    handler.handle_input();
+
+    handler.update(true);
     // unsigned int i, amt = (m_tally_recd - m_tally_sent);
     // for(i=0; i<amt; i++) {
     //     m_tally_sent++;
@@ -110,7 +111,7 @@ bool TrackMonitor::Iterate()
     //     }
     // }
 
-    handler.update(changed);
+    
     
     return(true);
 }

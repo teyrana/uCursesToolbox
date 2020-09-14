@@ -21,6 +21,14 @@
 
 #include "TrackCache.hpp"
 
+cache_iterator TrackCache::cbegin() const {
+    return index.cbegin();
+}
+
+cache_iterator TrackCache::cend() const {
+    return index.cend();
+}
+
 Track* const TrackCache::get(uint64_t id) const {
     return nullptr;
 }
@@ -29,6 +37,28 @@ size_t TrackCache::size() const {
     return index.size();
 }
 
-bool TrackCache::update(Report* report){
+bool TrackCache::update(std::unique_ptr<Report> report){
+    // create new Track, if missing
+    auto result = index.try_emplace(report->id, report->name, report->id);
+    
+    // equivalent to: `index[report->id].update(...)` ...but faster.  ;)
+    result.first->second.update(std::move(report));
+
     return true;
+}
+
+
+TrackCache::~TrackCache(){
+    // Probably not necessary.
+    // // for track in index:
+    // for (auto it = index.begin(); it != index.end(); ++it) {
+    //     uint64_t key = it->first;
+    //     Track* track = &it->second;
+    //     //     (1) remove track from index
+    //     index.erase(key);
+
+    //     //     (2) delete each track
+    //     delete track;
+    // }
+    return;
 }

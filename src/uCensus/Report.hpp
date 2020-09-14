@@ -18,22 +18,27 @@
 #ifndef REPORT_HPP
 #define REPORT_HPP
 
-class Report
-{
-    public:
-        Report(uint64_t _id);
+#include <memory>
 
-        ~Report() {};
+class Report {
+public:
+    static std::unique_ptr<Report> make(const std::string_view text);
+    
+    Report() = delete;
+    Report(std::string _name, uint64_t _id, double _ts,
+                double _x, double _y, double _heading,
+                double _course, double _speed);
+    ~Report() = default;
+
 
 // metadata
-        std::string name;
+        const std::string name;
         const uint64_t id;
+        const double timestamp;
 
-// position
-        const double latitude;
-        const double longitude;
-
-// orientation
+// position / orientation
+        const double x;  // meters to the right of the origin 
+        const double y;  // meters upwards from the origin
         /// /brief degrees CW from true north
         const double heading;
 
@@ -41,6 +46,9 @@ class Report
         /// /brief degrees CW from true north
         const double course;
         const double speed;
+
+private:
+    static const std::hash<std::string> hasher;
 
 };
 

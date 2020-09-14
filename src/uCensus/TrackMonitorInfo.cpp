@@ -22,20 +22,17 @@
 
 void showExampleConfigAndExit(){
     printf("\n");
-    printf("\n");
     printf("================================================================\n");
-    printf(" uCTrackMonitor example MOOS Configuration \n");
+    printf(" uCensus example MOOS Configuration \n");
     printf("================================================================\n");
     printf("\n");
     printf("ProcessConfig = uCTrackMonitor\n");
     printf("{\n");
-    printf("\n");
+    printf("AppTick    = 4\n");
+    printf("CommsTick  = 4\n");
     printf("   // -- no configuration -- \n");
     printf("\n");
     printf("}\n");
-    printf("\n");
-    printf("\n");
-
     exit(0);
 }
 
@@ -52,13 +49,11 @@ void showHelpAndExit(){
     // printf("  --version,-v\n");
     // printf("    Display the release version of uXMS.\n");
     printf("\n");
-    printf("\n");
 
     exit(0);
 }
 
 void showInterfaceAndExit(){
-    printf("\n");
     printf("\n");
     printf("================================================================\n");
     printf(" uCTrackMonitor\n");
@@ -67,7 +62,8 @@ void showInterfaceAndExit(){
     printf("\n");
     printf("Subscriptions\n");
     printf("-------------------------------------\n");
-    printf("  NODE_REPORT      = Used to listen to all NODE_REPORT that this community knows about.");
+    printf("  NODE_REPORT       = Used to listen to all NODE_REPORT that this community knows about.");
+    printf("  NODE_REPORT_LOCAL = Monitored for the current vessel's track.");
     printf("\n");
     printf("Publications\n");
     printf("-------------------------------------\n");
@@ -79,7 +75,6 @@ void showInterfaceAndExit(){
 }
 
 void showSynopsis(){
-    printf("\n");
     printf("Synopsis\n");
     printf("-------------------------------------\n");
     printf("  This app monitors track traffic, and provides a dynamic, configurable way to inspect same.\n");
@@ -87,7 +82,6 @@ void showSynopsis(){
 }
 
 void showVersionAndExit(){
-    printf("uCTrackMonitor - Version 0.0.1\n");
-
+    printf("uCensus - Version 0.0.1\n");
     exit(0);
 }

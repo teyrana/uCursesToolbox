@@ -15,6 +15,7 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
+#include <chrono>
 
 #include <ncurses.h>
 #include <signal.h>
@@ -40,7 +41,6 @@ void resizeHandler(int sig)
 CursesRenderer::CursesRenderer(TrackCache& _cache)
     : cache(_cache)
     , command(' ')
-    , iteration(0)
     , paused(false)
 {
     // SIGWINCH ~= SIGnal-WINdow-CHange
@@ -123,14 +123,23 @@ void CursesRenderer::render_column_headers(){
 }
 
 void CursesRenderer::render_column_contents(){
+    std::time_t current_time = std::time(nullptr);
 
     if(0 == cache.size()){
         // dummy / placeholder
-        mvprintw( 2, 0, "iGPS       1.1         2242.2 / 784823       55.09493 / 10.7993 \n");
+        mvprintw( 2, 0, " < No Tracks Received > ");
     } else {
-        for(size_t track_index=0; track_index < cache.size(); track_index++){
-            const size_t render_line = 2 + track_index; 
-            mvprintw( render_line, 0, "NYI");
+        size_t track_index = 0;
+        for (auto iter = cache.cbegin(); iter != cache.cend(); ++iter) {
+            const uint64_t id = iter->first;
+            const Track& track = iter->second;
+            
+            const size_t render_line = 2 + track_index;
+
+            const Report * const report = track.last_report.get();
+            const double age = current_time - report->timestamp;
+            mvprintw( render_line, 0, "%lu      %g     %g / %g  ", id, age, report->x, report->y);
+            ++track_index;
         }
     }
 

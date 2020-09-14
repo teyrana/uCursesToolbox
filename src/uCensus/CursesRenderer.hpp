@@ -62,10 +62,8 @@ class CursesRenderer
         static const int status_line_offset = -1;
 
         TrackCache& cache;
-        bool paused;
         char command;
-        int iteration;
-
+        bool paused;
 };
 
 

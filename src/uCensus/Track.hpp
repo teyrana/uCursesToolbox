@@ -22,7 +22,7 @@
 #include <string>
 #include <cstdint>
 
-using std::shared_ptr;
+using std::unique_ptr;
 using std::string;
 using std::uint32_t;
 
@@ -32,14 +32,16 @@ class Track
 {
     public:
         Track() = delete;
-        Track(uint64_t uuid);
+        Track(const std::string& _name, uint64_t uuid);
+        Track(const Track& other);
         ~Track() = default;
 
-    protected:
-        std::string name;
-        const uint64_t uuid;
+        void update(std::unique_ptr<Report> _report);
 
-        shared_ptr<Report> lastReport;
+        const std::string name;
+        const uint64_t id;
+
+        unique_ptr<Report> last_report;
 
 };
 

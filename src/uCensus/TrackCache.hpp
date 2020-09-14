@@ -19,23 +19,29 @@
 #define TRACK_CACHE_HPP
 
 #include <map>
-#include <vector>
+#include <memory>
 
 #include "Report.hpp"
 #include "Track.hpp"
+
+typedef std::map<uint64_t, Track>::const_iterator cache_iterator;
 
 class TrackCache
 {
     public:
         TrackCache() = default;
 
-        ~TrackCache() = default;
+        ~TrackCache();
+
+        cache_iterator cbegin() const;
+
+        cache_iterator cend() const;
 
         Track * const get(uint64_t id) const;
 
         size_t size() const;
 
-        bool update(Report* report);
+        bool update(std::unique_ptr<Report> report);
 
     private:
         std::map<uint64_t, Track> index;

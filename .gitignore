@@ -1,1 +1,4 @@
 bin
+
+missions/m*/XLOG_*
+missions/m*/targ_*

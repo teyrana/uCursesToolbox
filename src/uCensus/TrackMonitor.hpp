@@ -32,7 +32,7 @@ class TrackMonitor : public CMOOSApp
 {
     public:
         TrackMonitor();
-        virtual ~TrackMonitor() {};
+        virtual ~TrackMonitor();
 
         // required / inherited methods
         bool OnNewMail(MOOSMSG_LIST &NewMail) override;

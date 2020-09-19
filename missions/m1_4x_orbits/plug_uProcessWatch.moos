@@ -17,6 +17,7 @@ ProcessConfig = uProcessWatch
   watch  = pHelmIvP
 
   nowatch = uXMS*
+  nowatch = uCensus*
   nowatch = uPokeDB*
   nowatch = uQueryDB*
 

@@ -9,25 +9,25 @@ CMD_LINE_ARGS=""
 #-------------------------------------------------------------------
 for ARGI; do
     if [ "${ARGI}" = "--help" -o "${ARGI}" = "-h" ] ; then
-	printf "%s [SWITCHES]                       \n" $0
-	printf "Switches:                           \n" 
-	printf "  --help, -h                        \n" 
+        printf "%s [SWITCHES]                       \n" $0
+        printf "Switches:                           \n" 
+        printf "  --help, -h                        \n" 
         printf "  --debug,   -d                     \n"
         printf "  --release, -r                     \n"
-	printf "Notes:                              \n"
-	printf " (1) All other command line args will be passed as args    \n"
-	printf "     to \"make\" when it is eventually invoked.            \n"
-	printf " (2) For example -k will continue making when/if a failure \n"
-	printf "     is encountered in building one of the subdirectories. \n"
-	printf " (3) For example -j2 will utilize a 2nd core in the build  \n"
-	printf "     if your machine has two cores. -j4 etc for quad core. \n"
-	exit 0;
+        printf "Notes:                              \n"
+        printf " (1) All other command line args will be passed as args    \n"
+        printf "     to \"make\" when it is eventually invoked.            \n"
+        printf " (2) For example -k will continue making when/if a failure \n"
+        printf "     is encountered in building one of the subdirectories. \n"
+        printf " (3) For example -j2 will utilize a 2nd core in the build  \n"
+        printf "     if your machine has two cores. -j4 etc for quad core. \n"
+        exit 0;
     elif [ "${ARGI}" = "--debug" -o "${ARGI}" = "-d" ] ; then
         BUILD_TYPE="Debug"
     elif [ "${ARGI}" = "--release" -o "${ARGI}" = "-r" ] ; then
         BUILD_TYPE="Release"
     else
-	CMD_LINE_ARGS=$CMD_LINE_ARGS" "$ARGI
+        CMD_LINE_ARGS=$CMD_LINE_ARGS" "$ARGI
     fi
 done
 
@@ -38,11 +38,11 @@ done
 mkdir -p build
 
 pushd build
-if ! cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ../ ; then 
+if ! cmake -GNinja -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ../ ; then 
     exit $?
 fi
 
-if ! make ${CMD_LINE_ARGS} ; then
+if ! ninja ${CMD_LINE_ARGS} ; then
     exit $?
 fi
 popd

@@ -18,8 +18,8 @@ Processconfig = ANTLER
   Run = pMarineViewer   @ NewConsole = false
   Run = uXMS            @ NewConsole = false
 #endif
-  Run = pLogger         @ NewConsole = false
-  Run = uProcessWatch   @ NewConsole = false
+//  Run = pLogger         @ NewConsole = false
+//  Run = uProcessWatch   @ NewConsole = false
 
   Run = pShare          @ NewConsole = false
   Run = pHostInfo       @ NewConsole = false
@@ -128,8 +128,8 @@ ProcessConfig = uFldNodeComms
   //comms_range      = 15
   //critical_range   = 15
 
-  comms_range      = 500
-  critical_range   = 25
+  comms_range      = 2500
+  critical_range   = 500
 
   min_msg_interval = 15
   max_msg_length   = 1000
@@ -153,8 +153,8 @@ ProcessConfig = pHostInfo
 
 ProcessConfig = uXMS
 {
-  AppTick       = 1
-  CommsTick     = 1
+  AppTick       = 8
+  CommsTick     = 8
 
   var = APPCAST_REQ
 }

@@ -20,17 +20,14 @@ SET(SRC
 
 ADD_EXECUTABLE(${EXE} ${SRC})
 
-# Linux and Apple Libraries
-SET(SYSTEM_LIBS
-  m
-  pthread )
-
+target_compile_definitions(${EXE} PRIVATE DEBUG=1)
 
 TARGET_LINK_LIBRARIES(${EXE} PRIVATE
     ${SYSTEM_LIBS}
     ${CURSES_LIBRARIES}
     ${MOOS_LIBRARIES}
-    # ${MOOS_IVP_LIBRARIES})
+    # ${MOOS_IVP_LIBRARIES}
+    ${PROJ_LIBRARIES}
     genutil
     mbutil
     apputil)

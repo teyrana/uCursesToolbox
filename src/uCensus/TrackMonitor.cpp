@@ -23,7 +23,15 @@
 
 #include "TrackMonitor.hpp"
 
+using std::cout;
+using std::cerr;
+using std::endl;
 using std::string;
+
+#ifdef DEBUG
+    FILE* logfile = nullptr;
+#endif
+
 
 //---------------------------------------------------------
 // Constructor
@@ -31,7 +39,17 @@ using std::string;
 TrackMonitor::TrackMonitor()
     : handler(cache)
 {
-    
+#ifdef DEBUG
+    logfile = fopen("debug.log", "w");
+#endif
+}
+
+TrackMonitor::~TrackMonitor(){
+    fprintf(stderr, "closing: TrackMonitor\n");
+#ifdef DEBUG
+    fflush(logfile);
+    fclose(logfile);
+#endif
 }
 
 //---------------------------------------------------------
@@ -44,8 +62,9 @@ bool TrackMonitor::OnNewMail(MOOSMSG_LIST &NewMail)
         CMOOSMsg &msg = *p;
 
         const string key = msg.GetKey();
+        // fprintf(logfile, "    for: %s    from: %s\n", msg.GetKey().c_str(), msg.GetCommunity().c_str());
         if(("NODE_REPORT"==key) || ("NODE_REPORT_LOCAL"==key)){
-            cache.update(Report::make(msg.GetAsString()));
+            cache.update(msg.GetAsString());
         }
     }
 
@@ -62,10 +81,10 @@ bool TrackMonitor::OnNewMail(MOOSMSG_LIST &NewMail)
 bool TrackMonitor::OnConnectToServer()
 {
     // this is the only registration
-    Register("NODE_REPORT", 1.0);
-    Register("NODE_REPORT_LOCAL", 1.0);
+    Register("NODE_REPORT", 0.);
+    Register("NODE_REPORT_LOCAL", 0.);
 
-    std::cerr << "Connected to server!... Initializing Curses:" << std::endl;
+    fprintf(stderr, "Connected to server!... Initializing Curses:\n");
     
     // const double app_freq = GetAppFreq();
     handler.configure();//app_freq);
@@ -82,6 +101,7 @@ bool TrackMonitor::Iterate()
     handler.handle_input();
 
     handler.update(true);
+
     // unsigned int i, amt = (m_tally_recd - m_tally_sent);
     // for(i=0; i<amt; i++) {
     //     m_tally_sent++;
@@ -120,23 +140,34 @@ bool TrackMonitor::Iterate()
 //---------------------------------------------------------
 // Procedure: OnStartUp()
 //      Note: happens before connection is open
-
 bool TrackMonitor::OnStartUp()
 {
-    // STRING_LIST sParams;
-    // m_MissionReader.GetConfiguration(GetAppName(), sParams);
-    // STRING_LIST::iterator p;
-    // for(p = sParams.begin();p!=sParams.end();p++) {
-    //     string line  = *p;
-    //     string param = tolower(biteStringX(line, '='));
-    //     string value = line;
-    //
-    //     // if("apptick" == param){
-    //     //     std::cerr << "AppTick == " << value << std::endl;
-    //     // }else if("commstick"== param){
-    //     //     std::cerr << "CommsTick == " << value << std::endl;
-    //     // }
-    // }
+    STRING_LIST sParams;
+    STRING_LIST::iterator p;
+    double origin_latitude, origin_longitude;
+
+    fprintf(logfile, "==== Loading :%s: Config ====\n", GetAppName().c_str() );
+    m_MissionReader.GetConfiguration(GetAppName(), sParams);
+    for(p = sParams.begin();p!=sParams.end();p++) {
+        string line  = *p;
+        string param = tolower(biteStringX(line, '='));
+        string value = line;
+
+        if("latorigin" == param){
+            origin_latitude = std::atof(value.c_str());
+            fprintf(logfile, "    LatOrigin  == %g\n", origin_latitude );
+        }else if("longorigin" == param){
+            origin_longitude = std::atof(value.c_str());
+            fprintf(logfile, "    LongOrigin == %g\n", origin_longitude );
+
+        // if("apptick" == param){
+        //     std::cerr << "AppTick == " << value << std::endl;
+        // }else if("commstick"== param){
+        //     std::cerr << "CommsTick == " << value << std::endl;
+
+        }
+        cache.set_origin(origin_latitude, origin_longitude);
+    }
 
     return(true);
 }

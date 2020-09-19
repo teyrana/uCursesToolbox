@@ -59,5 +59,6 @@ int main(int argc, char *argv[])
 
     monitor.Run(run_command.c_str(), mission_file.c_str());
 
-    return(0);
+    fprintf(stderr, "MOOS Client Finished.\n");
+    return EXIT_SUCCESS;
 }

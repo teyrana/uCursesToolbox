@@ -21,10 +21,16 @@
 #include <string>
 #include <string_view>
 
+#include <proj.h>
+
 #include "Report.hpp"
 
 using std::isnan;
 using std::atof;
+
+#ifdef DEBUG
+extern FILE* logfile;
+#endif
 
 Report::Report(std::string _name, uint64_t _id, double _ts,
                 double _x, double _y, double _heading,
@@ -49,9 +55,12 @@ static inline std::string_view trim(std::string_view v) {
 //  " NAME=alpha,TYPE=UUV,TIME=1252348077.59,X=51.71,Y=-35.50,
 //    LAT=43.824981,LON=-70.329755,SPD=2.00,HDG=118.85,YAW=118.84754,
 //    DEP=4.63,LENGTH=3.8,MODE=MODE@ACTIVE:LOITERING"
-std::unique_ptr<Report> Report::make(const std::string_view text)
+std::unique_ptr<Report> Report::make(const std::string_view text, 
+                                        PJ* proj, double origin_easting, double origin_northing)
 {
-
+    // fprintf(logfile, "==== Generating Target Report ====\n");
+    // fprintf(logfile, "    source: %s\n", text.data());
+        
     std::string name("");
     size_t id = 0;
 
@@ -60,6 +69,8 @@ std::unique_ptr<Report> Report::make(const std::string_view text)
     // position
     double x = NAN;
     double y = NAN;
+    double latitude = NAN;
+    double longitude = NAN;
 
     // orientation
     /// /brief degrees CW from true north
@@ -69,7 +80,6 @@ std::unique_ptr<Report> Report::make(const std::string_view text)
     /// /brief degrees CW from true north
     double course = NAN;
     double speed = NAN;
-
 
     const auto npos = std::string::npos;
 
@@ -104,15 +114,17 @@ std::unique_ptr<Report> Report::make(const std::string_view text)
         // }else if("TYPE"==key){
         }else if("TIME"==key){
             timestamp = std::atof(value.data());
-        }else if("X=51.71"==key){
+        }else if("X"==key){
             x = std::atof(value.data());
-        }else if("Y=-35.50"==key){
+        }else if("Y"==key){
             y = std::atof(value.data());
-        // }else if("LAT"==key){
-        // }else if("LON"==key){
-        }else if("SPD=2.00"==key){
+        }else if("LAT"==key){
+            latitude = std::atof(value.data());
+        }else if("LON"==key){
+            longitude = std::atof(value.data());
+        }else if("SPD"==key){
             speed = std::atof(value.data());
-        }else if("HDG=118.85"==key){
+        }else if("HDG"==key){
             heading = std::atof(value.data());
         //}else if("YAW=118.84754,
         //}else if("DEP=4.63,
@@ -120,13 +132,36 @@ std::unique_ptr<Report> Report::make(const std::string_view text)
         // }else if("MODE=MODE@ACTIVE:LOITERING"
         }
     }
-
+    
     if( isnan(course) && !isnan(heading)){
         course = heading;
     }else if( isnan(heading) && !isnan(course)){
         heading = course;
     }
 
+    if( isnan(x) || isnan(y)){
+        // fprintf(logfile, "<< Missing: x,y\n");
+        // fprintf(logfile, "    source: %s\n", text.data());
+        // fprintf(logfile, "    Projecting LL: %g, %g \n", latitude, longitude);
+        PJ_COORD c_in = proj_coord( proj_torad(longitude), proj_torad(latitude), 0, 0);
+
+        // fprintf(logfile, "    (Radians) LL: %g, %g \n", proj_torad(longitude), proj_torad(latitude));
+
+        PJ_COORD raw_coord = proj_trans( proj, PJ_FWD, c_in);
+        
+        // fprintf( logfile, "    Easting: %.3f, Northing: %.3f\n", raw_coord.enu.e, raw_coord.enu.n );
+
+        //raw_x, raw_y = pyproj.transform(self.pj_latlong, self.pj_utm, source.longitude, source.latitude)
+        
+        // PJ_COORD back_coord = proj_trans (proj, PJ_INV, raw_coord);
+        // fprintf(logfile, "    Back-Check: Longitude: %g, Latitude: %g\n", back_coord.lp.lam, back_coord.lp.phi);
+
+        x = raw_coord.enu.e + origin_easting;
+        y = raw_coord.enu.n + origin_northing;
+        // fprintf(logfile, "    Projecting to UTM: %g, %g \n", x, y);
+        // fflush(logfile);
+    }
+    
     if(0 == id){
         id = hasher(name);
     }

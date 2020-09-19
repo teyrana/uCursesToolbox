@@ -117,7 +117,7 @@ void CursesRenderer::render_status_bar(){
 // }
 
 void CursesRenderer::render_column_headers(){
-    mvprintw(0,0,"Source       Time           X / Y            Latitude / Longitude    ");
+    mvprintw(0,0,"Source             Time                Name        X / Y            Latitude / Longitude    ");
     move(1,0);
     hline(ACS_HLINE, 999);
 }
@@ -138,7 +138,7 @@ void CursesRenderer::render_column_contents(){
 
             const Report * const report = track.last_report.get();
             const double age = current_time - report->timestamp;
-            mvprintw( render_line, 0, "%lu      %g     %g / %g  ", id, age, report->x, report->y);
+            mvprintw( render_line, 0, "%lu    %g     %s     %g / %g  ", id, track.name.c_str(), age, report->x, report->y);
             ++track_index;
         }
     }

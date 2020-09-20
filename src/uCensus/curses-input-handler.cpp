@@ -17,8 +17,8 @@
 
 #include <ncurses.h>
 
-#include "CursesInputHandler.hpp"
-#include "CursesRenderer.hpp"
+#include "curses-input-handler.hpp"
+#include "curses-renderer.hpp"
 
 CursesInputHandler::CursesInputHandler(TrackCache& cache)
     : renderer(cache)

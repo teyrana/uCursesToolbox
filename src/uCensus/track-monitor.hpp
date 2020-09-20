@@ -15,40 +15,35 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-#ifndef CURSES_INPUT_HANDLER_HPP
-#define CURSES_INPUT_HANDLER_HPP
+#ifndef TRAFFIC_MONITOR_HPP
+#define TRAFFIC_MONITOR_HPP
 
-#include <string>
-// #include <memory>
+#include <memory>
+using std::unique_ptr;
 
-#include "CursesRenderer.hpp"
+#include "MOOS/libMOOS/MOOSLib.h"
 
-using std::string;
+#include "track-cache.hpp"
+#include "curses-input-handler.hpp"
+#include "curses-renderer.hpp"
 
-class CursesInputHandler
+// see: http://gobysoft.org/doc/moos/class_c_m_o_o_s_app.html
+class TrackMonitor : public CMOOSApp
 {
     public:
-        CursesInputHandler() = delete;
-        
-        CursesInputHandler(TrackCache& cache);
+        TrackMonitor();
+        virtual ~TrackMonitor();
 
-        void configure();
+        // required / inherited methods
+        bool OnNewMail(MOOSMSG_LIST &NewMail) override;
+        bool Iterate() override;
+        bool OnConnectToServer() override;
+        bool OnStartUp() override;
 
-        ~CursesInputHandler() =  default;
-
-        bool handle_input();
-        
-        void update(bool changed);
-
-    private:
-        bool handle_option_key(const char key);
-        
-        void shutdownCurses();
-
-    private:
-        CursesRenderer renderer;
+    protected:
+        CursesInputHandler handler;
+        TrackCache cache;
 
 };
-
 
 #endif

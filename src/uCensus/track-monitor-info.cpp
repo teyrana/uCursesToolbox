@@ -18,7 +18,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "TrackMonitorInfo.hpp"
+#include "track-monitor-info.hpp"
 
 void showExampleConfigAndExit(){
     printf("\n");

@@ -20,7 +20,7 @@
 #include <ncurses.h>
 #include <signal.h>
 
-#include "CursesRenderer.hpp"
+#include "curses-renderer.hpp"
 
 /* If an xterm is resized the contents on your text windows might be messed up.
 To handle this gracefully you should redraw all the stuff based on the new
@@ -45,6 +45,16 @@ CursesRenderer::CursesRenderer(TrackCache& _cache)
 {
     // SIGWINCH ~= SIGnal-WINdow-CHange
     signal(SIGWINCH, resizeHandler);
+
+    // columns.emplace(? "Source", 
+    columns.emplace_back("ID", "Id", "%lX", 20);
+    //columns.emplace_back("TIME", "Time", "%g", 12);
+    columns.emplace_back("AGE", "Time", "%+9.8g", 12);
+    columns.emplace_back("NAME", "Name", "%-20s", 20);
+    columns.emplace_back("X", "X", "%+9.2g", 10);
+    columns.emplace_back("Y", "Y", "%+9.2g", 10);
+    
+    // mvprintw(0,0,"Source             Time                Name        X / Y            Latitude / Longitude    ");
 }
 
 void CursesRenderer::configure(){
@@ -117,8 +127,15 @@ void CursesRenderer::render_status_bar(){
 // }
 
 void CursesRenderer::render_column_headers(){
-    mvprintw(0,0,"Source             Time                Name        X / Y            Latitude / Longitude    ");
-    move(1,0);
+    // mvprintw(0,0,"Source             Time                Name        X / Y            Latitude / Longitude    ");
+    int col = 0;
+    for( DisplayColumn& disp : columns ){
+        mvprintw( 0, col, disp.title.c_str());
+        col += disp.width;
+    }
+
+    // draw a horizontal rule <hr> between the Column Titles and the data
+    move( 1, 0);
     hline(ACS_HLINE, 999);
 }
 
@@ -127,19 +144,35 @@ void CursesRenderer::render_column_contents(){
 
     if(0 == cache.size()){
         // dummy / placeholder
-        mvprintw( 2, 0, " < No Tracks Received > ");
+        mvprintw( header_line_offset, 0, " < No Tracks Received > ");
     } else {
-        size_t track_index = 0;
+        size_t row = header_line_offset;
         for (auto iter = cache.cbegin(); iter != cache.cend(); ++iter) {
             const uint64_t id = iter->first;
             const Track& track = iter->second;
             
-            const size_t render_line = 2 + track_index;
-
             const Report * const report = track.last_report.get();
-            const double age = current_time - report->timestamp;
-            mvprintw( render_line, 0, "%lu    %g     %s     %g / %g  ", id, track.name.c_str(), age, report->x, report->y);
-            ++track_index;
+
+            int col = 0;
+            for( DisplayColumn& disp : columns ){
+                if("AGE" == disp.key){
+                    const double age = current_time - report->timestamp;
+                    mvprintw( row, col, disp.format.c_str(), age);
+                }else if("TIME" == disp.key){
+                    mvprintw( row, col, disp.format.c_str(), report->timestamp);
+                }else if("ID" == disp.key){
+                    mvprintw( row, col, disp.format.c_str(), id);
+                }else if("NAME" == disp.key){
+                    mvprintw( row, col, disp.format.c_str(), track.name.c_str());
+                }else if("X" == disp.key){
+                    mvprintw( row, col, disp.format.c_str(), report->x);
+                }else if("Y" == disp.key){
+                    mvprintw( row, col, disp.format.c_str(), report->y);
+                }
+                
+                col += disp.width;
+            }
+            ++row;
         }
     }
 

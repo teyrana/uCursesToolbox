@@ -15,46 +15,25 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-#ifndef TRACK_CACHE_HPP
-#define TRACK_CACHE_HPP
+#include <cstdlib>
+#include <iostream>
 
-#include <map>
-#include <memory>
+#include "report.hpp"
+#include "track.hpp"
 
-#include "Report.hpp"
-#include "Track.hpp"
+using namespace std;
 
-typedef std::map<uint64_t, Track>::const_iterator cache_iterator;
+Track::Track(const std::string& _name, uint64_t _id)
+    : name(_name)
+    , id(_id)
+{}
 
-class TrackCache
-{
-    public:
-        TrackCache();
+Track::Track(const Track& other)
+    : name(other.name)
+    , id(other.id)
+{}
 
-        ~TrackCache();
-
-        cache_iterator cbegin() const;
-
-        cache_iterator cend() const;
-
-        Track * const get(uint64_t id) const;
-
-        void set_origin(double latitude, double longitude);
-
-        size_t size() const;
-
-        bool update(const std::string_view text);
-
-    private:
-        double origin_latitude;
-        double origin_longitude;
-        double origin_easting;
-        double origin_northing;
-
-        PJ_CONTEXT *contextp;
-        PJ* proj;
-        std::map<uint64_t, Track> index;
-
-};
-
-#endif
+void Track::update(std::unique_ptr<Report> _report){
+    last_report = std::move(_report);
+    // _report is left in an undefined state
+}

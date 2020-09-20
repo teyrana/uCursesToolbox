@@ -20,9 +20,10 @@
 
 #include <memory>
 #include <string>
-// #include <vector>
+#include <vector>
 
-#include "TrackCache.hpp"
+#include "display-column.hpp"
+#include "track-cache.hpp"
 
 using std::string;
 
@@ -56,11 +57,14 @@ class CursesRenderer
         // void render_status_bar();
 
     private: 
+        static const int header_line_offset = 2;
+        
         static const int footer_line_offset = -4;
         static const int option_upper_line_offset = -3;
         static const int option_lower_line_offset = -2;
         static const int status_line_offset = -1;
 
+        std::vector<DisplayColumn> columns;
         TrackCache& cache;
         char command;
         bool paused;

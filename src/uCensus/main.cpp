@@ -20,8 +20,8 @@
 
 #include "MBUtils.h"
 
-#include "TrackMonitor.hpp"
-#include "TrackMonitorInfo.hpp"
+#include "track-monitor.hpp"
+#include "track-monitor-info.hpp"
 
 using std::string;
 

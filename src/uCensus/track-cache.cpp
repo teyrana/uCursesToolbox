@@ -21,7 +21,7 @@
 
 #include <proj.h>
 
-#include "TrackCache.hpp"
+#include "track-cache.hpp"
 
 PJ* P_for_GIS;
 PJ_COORD a, b;

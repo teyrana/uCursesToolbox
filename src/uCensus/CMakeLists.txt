@@ -8,13 +8,14 @@
 SET(EXE uCensus)
 
 SET(SRC
-    CursesInputHandler.cpp
-    CursesRenderer.cpp
-    TrackCache.cpp
-    TrackMonitor.cpp
-    TrackMonitorInfo.cpp
-    Report.cpp
-    Track.cpp
+    curses-input-handler.cpp
+    curses-renderer.cpp
+    display-column.cpp
+    track-cache.cpp
+    track-monitor.cpp
+    track-monitor-info.cpp
+    report.cpp
+    track.cpp
     main.cpp
 )
 

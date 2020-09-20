@@ -15,25 +15,30 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-#include <cstdlib>
-#include <iostream>
+#ifndef DISPLAY_COLUMN_HPP
+#define DISPLAY_COLUMN_HPP
 
-#include "Report.hpp"
-#include "Track.hpp"
+#include <string>
 
-using namespace std;
+using std::string;
 
-Track::Track(const std::string& _name, uint64_t _id)
-    : name(_name)
-    , id(_id)
-{}
+class DisplayColumn 
+{
 
-Track::Track(const Track& other)
-    : name(other.name)
-    , id(other.id)
-{}
+public:
+    DisplayColumn() = delete;
+    DisplayColumn(const std::string _key, 
+                    const std::string _title,
+                    const std::string _format,
+                    size_t _width);
+    // ~DisplayColumn() = default;
 
-void Track::update(std::unique_ptr<Report> _report){
-    last_report = std::move(_report);
-    // _report is left in an undefined state
-}
+    const std::string key;
+    const std::string title;
+    const std::string format;
+    size_t width;
+    
+};
+
+
+#endif

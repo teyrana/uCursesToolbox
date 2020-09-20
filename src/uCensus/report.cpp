@@ -23,7 +23,7 @@
 
 #include <proj.h>
 
-#include "Report.hpp"
+#include "report.hpp"
 
 using std::isnan;
 using std::atof;

@@ -15,34 +15,45 @@
 // Boston, MA 02111-1307, USA.
 //*****************************************************************************
 
-#ifndef TRAFFIC_MONITOR_HPP
-#define TRAFFIC_MONITOR_HPP
+#ifndef TRACK_CACHE_HPP
+#define TRACK_CACHE_HPP
 
+#include <map>
 #include <memory>
-using std::unique_ptr;
 
-#include "MOOS/libMOOS/MOOSLib.h"
+#include "report.hpp"
+#include "track.hpp"
 
-#include "TrackCache.hpp"
-#include "CursesInputHandler.hpp"
-#include "CursesRenderer.hpp"
+typedef std::map<uint64_t, Track>::const_iterator cache_iterator;
 
-// see: http://gobysoft.org/doc/moos/class_c_m_o_o_s_app.html
-class TrackMonitor : public CMOOSApp
+class TrackCache
 {
     public:
-        TrackMonitor();
-        virtual ~TrackMonitor();
+        TrackCache();
 
-        // required / inherited methods
-        bool OnNewMail(MOOSMSG_LIST &NewMail) override;
-        bool Iterate() override;
-        bool OnConnectToServer() override;
-        bool OnStartUp() override;
+        ~TrackCache();
 
-    protected:
-        CursesInputHandler handler;
-        TrackCache cache;
+        cache_iterator cbegin() const;
+
+        cache_iterator cend() const;
+
+        Track * const get(uint64_t id) const;
+
+        void set_origin(double latitude, double longitude);
+
+        size_t size() const;
+
+        bool update(const std::string_view text);
+
+    private:
+        double origin_latitude;
+        double origin_longitude;
+        double origin_easting;
+        double origin_northing;
+
+        PJ_CONTEXT *contextp;
+        PJ* proj;
+        std::map<uint64_t, Track> index;
 
 };
 
